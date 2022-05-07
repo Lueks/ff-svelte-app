@@ -38,6 +38,7 @@ app.post("/receiveattributes", (req, res) => {
     let fullPayload= req.body.value;
     let lastElement = fullPayload[fullPayload.length - 1]
     res.send({message: `${lastElement.category}: ${lastElement.name} gespeichert`})
+    console.log(lastElement)
 })
 
 app.listen(8081, () => {console.log("Server listening")});
