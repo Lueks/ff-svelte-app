@@ -1,5 +1,4 @@
 <script>
-	import { empty } from 'svelte/internal';
 	import { expression } from '../stores/expressionStore';
 </script>
 
