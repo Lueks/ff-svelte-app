@@ -4,6 +4,9 @@ const app = express();
 const cors = require("cors");
 const axios = require("axios")
 
+const datastore = require("nedb");
+let db = new datastore({filename: 'expressionDB', autoload: true});
+
 
 app.use(express.json())
 app.use(cors())
@@ -37,8 +40,18 @@ app.get("/getattributes", (req, res) => {
 app.post("/receiveattributes", (req, res) => {
     let fullPayload= req.body.value;
     let lastElement = fullPayload[fullPayload.length - 1]
+    
+    db.insert(lastElement, (err, newDoc) => {
+        if (err) {
+            console.error(err)
+        }
+        else {
+            console.log(`${newDoc.name} received`)
+        }
+    })
+    
     res.send({message: `${lastElement.category}: ${lastElement.name} gespeichert`})
-    console.log(lastElement)
+    
 })
 
 app.listen(8081, () => {console.log("Server listening")});
