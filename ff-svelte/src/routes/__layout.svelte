@@ -12,6 +12,9 @@
 			<a href="/filter" class="text-sm text-white my-2  p-2 bg-slate-500 border-2 rounded-md"
 				>Ausdruck erstellen</a
 			>
+			<a href="/strategy" class="text-sm text-white my-2  p-2 bg-slate-500 border-2 rounded-md"
+				>Suchstrategie erstellen</a
+			>
 			<a href="/map" class="text-sm text-white my-2 p-2 bg-slate-500 border-2 rounded-md "
 				>Karte anzeigen</a
 			>

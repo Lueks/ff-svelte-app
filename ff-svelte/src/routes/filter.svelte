@@ -1,16 +1,41 @@
 <script>
-	import { expression, saveExpression } from '../stores/expressionStore';
+	import { expression } from '../stores/expressionStore';
 	import { attributeStore } from '../stores/attributeStore';
 	import GTable from '../components/GTable.svelte';
 	import RTable from '../components/RTable.svelte';
 	import TTable from '../components/TTable.svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
 	let comparison;
 	let comparisonValue;
 	let attribute;
 	let name;
 	let category;
-	let categorys;
+
+	onMount(() => {
+		function loadExpressions() {
+			fetch('http://localhost:8081/sendattributes')
+				.then((res) => res.json())
+				.then((data) => expression.set(data));
+		}
+		loadExpressions();
+	});
+
+	onDestroy(() => {
+		function saveExpressions() {
+			let payload = $expression;
+			console.log(payload);
+			fetch('http://localhost:8081/receiveattributes', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload)
+			})
+				.then((res) => res.json())
+				.then((data) => console.log(data));
+		}
+		saveExpressions();
+	});
 
 	let comparisonParser = function (value) {
 		if (value == 'weniger als') {
@@ -29,7 +54,7 @@
 				attribute: attribute.value,
 				comparison: comparisonParser(comparison.value),
 				comparisonValue: comparisonValue.value,
-				id: Math.floor(Math.random() * 1000)
+				id: Math.floor(Math.random() * 100000)
 			}
 		];
 		// name.value = '';
@@ -37,11 +62,10 @@
 		// attribute.value = '';
 		// comparison.value = '';
 		// comparisonValue.value = '';
-		saveExpression();
 	};
 </script>
 
-<div id="wrapper" class="flex flex-row">
+<div id="wrapper" class="flex flex-row bg-gray-300">
 	<div id="Filter" class="w-2/4">
 		<div class="ml-3">
 			<h1 class="text-lg py-5 underline decoration-4 decoration-sky-500">Ausdruck erstellen</h1>

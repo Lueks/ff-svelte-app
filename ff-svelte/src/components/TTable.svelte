@@ -9,6 +9,11 @@
 			return false;
 		}
 	};
+
+	const handleEdit = (e) => {
+		let tid = e.target.parentNode.parentNode.id;
+		$expression = $expression.filter((x) => x.id != tid);
+	};
 </script>
 
 <div class="container flex  min-w-fit justify-center mx-auto my-8">
@@ -24,6 +29,7 @@
 					<th class="px-6 py-2 test-xs text-gray-500"> Attribute </th>
 					<th class="px-6 py-2 test-xs text-gray-500"> Vorzeichen </th>
 					<th class="px-6 py-2 test-xs text-gray-500"> Entfernung </th>
+					<th />
 				</thead>
 
 				<tbody class="bg-white">
@@ -32,11 +38,17 @@
 					{:else}
 						{#each $expression as exp (exp.id)}
 							{#if exp.category == 'Tabu'}
-								<tr class=" whitespace-nowrap">
+								<tr id={exp.id} class=" whitespace-nowrap">
 									<td class="px-6 py-4 font-bold  text-gray-500">{exp.name}</td>
 									<td class="px-6 py-4 text-sm text-gray-500">{exp.attribute}</td>
 									<td class="px-6 py-4 text-sm text-gray-500">{exp.comparison}</td>
 									<td class="px-6 py-4 text-sm text-gray-500">{exp.comparisonValue}</td>
+									<td
+										><button
+											class="bg-slate-300 p-2 rounded-md hover:bg-red-400"
+											on:click={handleEdit}>Löschen</button
+										></td
+									>
 								</tr>
 							{/if}
 						{/each}

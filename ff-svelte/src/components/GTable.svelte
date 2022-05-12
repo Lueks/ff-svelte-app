@@ -1,5 +1,5 @@
 <script>
-	import { expression, saveExpressions } from '../stores/expressionStore';
+	import { expression } from '../stores/expressionStore';
 
 	const getL = () => {
 		let l = $expression.filter((exp) => exp.category == 'Gunstfaktor');
@@ -13,13 +13,12 @@
 	const handleEdit = (e) => {
 		let tid = e.target.parentNode.parentNode.id;
 		$expression = $expression.filter((x) => x.id != tid);
-		saveExpressions();
 	};
 </script>
 
 <div class="container flex  min-w-fit justify-center mx-auto my-8">
 	<div class="flex flex-col">
-		<div class="border-b border-gray-200 shadow">
+		<div class="border-b border-gray-200 shadow-xl">
 			<caption
 				class="w-full text-left mb-2 p-2 text-lg underline decoration-4 decoration-green-400 bg-green-200"
 				>Gunstfaktoren</caption
@@ -40,7 +39,7 @@
 						>
 					{:else}
 						{#each $expression as exp}
-							{#if exp.category == 'Gunstfaktor' && exp.isEdited == false}
+							{#if exp.category == 'Gunstfaktor'}
 								<tr id={exp.id} class="whitespace-nowrap">
 									<td class="px-6 py-4 font-bold  text-green-500">{exp.name}</td>
 									<td class="px-6 py-4 text-sm text-gray-500">{exp.attribute}</td>
