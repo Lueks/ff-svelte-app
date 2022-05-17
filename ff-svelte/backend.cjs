@@ -6,6 +6,7 @@ const axios = require("axios")
 
 const datastore = require("nedb");
 const { json } = require("express/lib/response");
+const { doc } = require("prettier");
 let db = new datastore({filename: 'expressionDB', autoload: true});
 
 
@@ -36,29 +37,33 @@ app.get("/getattributes", (req, res) => {
 
 
 
-
+// db.remove({}, () => {
+//     db.loadDatabase()
+// })
 
 
 app.post("/receiveattributes", (req, res) => {
-    db.remove({}, {multi: true}, (err, numRemoved) => {
-        db.loadDatabase((err) => {})
-    })
-    
     let Payload= req.body;
+    Payload.forEach((item) => {
+        
+        db.insert(item);
+    })
+
+
+})
+
+app.post("/deleteexpression", (req, res) => {
+    let Payload = req.body[0]
     console.log(Payload)
-    // db.remove({}, {multi: true}, function (err, numRemoved){
-    //     console.log(err);
-    //     db.loadDatabase(function (err) {console.log(err)})});
-    db.insert(Payload, (err, newDoc) => {
+    db.remove({id: Payload.id}, {}, (err, numRemoved) => {
         if (err) {
-            console.error(err)
+            console.log(err)
         }
-        else {
-            console.log(`${newDoc} received`)
-        }
-    });
-    //res.send("Payload received") 
-});
+        console.log(numRemoved)
+        res.send({response: "Test"})
+    })
+})
+
 
 app.get('/sendattributes', (req, res) => {
     db.find({}, (err, docs) => {

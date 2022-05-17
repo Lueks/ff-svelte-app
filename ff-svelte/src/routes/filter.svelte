@@ -5,19 +5,23 @@
 	import RTable from '../components/RTable.svelte';
 	import TTable from '../components/TTable.svelte';
 	import { onDestroy, onMount } from 'svelte';
-	import { get } from 'svelte/store';
 
 	let comparison;
 	let comparisonValue;
 	let attribute;
 	let name;
 	let category;
+	let loading;
 
 	onMount(() => {
 		function loadExpressions() {
+			loading = true;
 			fetch('http://localhost:8081/sendattributes')
 				.then((res) => res.json())
-				.then((data) => expression.set(data));
+				.then((data) => {
+					expression.set(data);
+					return (loading = false);
+				});
 		}
 		loadExpressions();
 	});
@@ -35,6 +39,7 @@
 				.then((data) => console.log(data));
 		}
 		saveExpressions();
+		console.log('destry');
 	});
 
 	let comparisonParser = function (value) {
@@ -54,7 +59,8 @@
 				attribute: attribute.value,
 				comparison: comparisonParser(comparison.value),
 				comparisonValue: comparisonValue.value,
-				id: Math.floor(Math.random() * 100000)
+				id: Math.floor(Math.random() * 100000),
+				isForced: false
 			}
 		];
 		// name.value = '';
@@ -130,8 +136,12 @@
 		</div>
 	</div>
 	<div class="overflow-y-auto h-screen w-2/4 ml-4 mt-5 pl-4">
-		<RTable />
-		<GTable />
-		<TTable />
+		{#if loading == true}
+			<h1>Lädt...</h1>
+		{:else}
+			<RTable />
+			<GTable />
+			<TTable />
+		{/if}
 	</div>
 </div>

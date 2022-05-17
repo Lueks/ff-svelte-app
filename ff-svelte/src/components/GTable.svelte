@@ -1,6 +1,8 @@
 <script>
 	import { expression } from '../stores/expressionStore';
 
+	let buttonState;
+
 	const getL = () => {
 		let l = $expression.filter((exp) => exp.category == 'Gunstfaktor');
 		if (l.length == 0) {
@@ -12,7 +14,17 @@
 
 	const handleEdit = (e) => {
 		let tid = e.target.parentNode.parentNode.id;
+
+		let Payload = $expression.filter((x) => x.id == tid);
 		$expression = $expression.filter((x) => x.id != tid);
+		console.log(Payload[0]);
+		fetch('http://localhost:8081/deleteexpression', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(Payload)
+		})
+			.then((res) => res.json())
+			.then((data) => console.log(data));
 	};
 </script>
 
@@ -29,12 +41,13 @@
 					<th class="px-6 py-2 test-xs text-gray-500"> Attribute </th>
 					<th class="px-6 py-2 test-xs text-gray-500"> Vorzeichen </th>
 					<th class="px-6 py-2 test-xs text-gray-500"> Entfernung </th>
+					<th class="px-6 py-2 test-xs text-gray-500"> Ist obligatorisch? </th>
 					<th />
 				</thead>
 
 				<tbody class="bg-white">
 					{#if ($expression, getL())}
-						<td colspan="4" class="px-6 py-4 text-sm text-gray-500"
+						<td colspan="5" class="px-6 py-4 text-sm text-gray-500"
 							>Keine Gunstfaktoren gespeichert</td
 						>
 					{:else}
@@ -45,6 +58,9 @@
 									<td class="px-6 py-4 text-sm text-gray-500">{exp.attribute}</td>
 									<td class="px-6 py-4 text-sm text-gray-500">{exp.comparison}</td>
 									<td class="px-6 py-4 text-sm text-gray-500">{exp.comparisonValue}</td>
+
+									<td><input type="checkbox" bind:checked={exp.isForced} /></td>
+
 									<td
 										><button
 											class="bg-slate-300 p-2 rounded-md hover:bg-red-400"
